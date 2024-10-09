@@ -1,0 +1,21 @@
+[submodule "third_party/Catch2"]
+	path = third_party/Catch2
+	url = https://github.com/catchorg/Catch2.git
+[submodule "third_party/spdlog"]
+	path = third_party/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "third_party/reflect-cpp"]
+	path = third_party/reflect-cpp
+	url = https://github.com/getml/reflect-cpp.git
+[submodule "third_party/json"]
+	path = third_party/json
+	url = https://github.com/nlohmann/json.git
+[submodule "third_party/csv-parser"]
+	path = third_party/csv-parser
+	url = https://github.com/vincentlaucsb/csv-parser.git
+[submodule "third_party/graaf"]
+	path = third_party/graaf
+	url = https://github.com/bobluppes/graaf.git
+[submodule "third_party/lexbor"]
+	path = third_party/lexbor
+	url = https://github.com/lexbor/lexbor.git

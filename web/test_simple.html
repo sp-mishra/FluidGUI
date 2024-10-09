@@ -1,0 +1,30 @@
+<div>
+    <button id="increment">+</button>
+    <button id="decrement">−</button>
+    <span>Counter: <span id="counterResult">0</span></span>
+</div>
+<hr />
+<div>
+    <button id="compute">Compute</button>
+    <span>Result: <span id="computeResult">(not started)</span></span>
+</div>
+<script type="module">
+    const getElements = ids => Object.assign({}, ...ids.map(
+        id => ({ [id]: document.getElementById(id) })));
+    const ui = getElements([
+        "increment", "decrement", "counterResult", "compute",
+        "computeResult"
+    ]);
+    ui.increment.addEventListener("click", async () => {
+        ui.counterResult.textContent = await window.count(1);
+    });
+    ui.decrement.addEventListener("click", async () => {
+        ui.counterResult.textContent = await window.count(-1);
+    });
+    ui.compute.addEventListener("click", async () => {
+        ui.compute.disabled = true;
+        ui.computeResult.textContent = "(pending)";
+        ui.computeResult.textContent = await window.compute(6, 7);
+        ui.compute.disabled = false;
+    });
+</script>

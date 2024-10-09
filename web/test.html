@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Login Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .login-form button:hover {
+            background-color: #2980b9;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <login-page></login-page>
+</div>
+
+<script>
+    // Define the login form component
+    Vue.component('login-form', {
+        data() {
+            return {
+                username: '',
+                password: '',
+                errorMessage: ''
+            }
+        },
+        methods: {
+            login() {
+                if (this.username === '' || this.password === '') {
+                    this.errorMessage = 'Please fill in both fields.';
+                } else {
+                    // Simulate login logic
+                    if (this.username === 'admin' && this.password === 'password') {
+                        this.errorMessage = '';
+                        alert('Login successful!');
+                    } else {
+                        this.errorMessage = 'Invalid username or password.';
+                    }
+                }
+            }
+        },
+        template: `
+                <div class="login-form">
+                    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+                    <label for="username">Username</label>
+                    <input type="text" v-model="username" placeholder="Enter your username">
+
+                    <label for="password">Password</label>
+                    <input type="password" v-model="password" placeholder="Enter your password">
+
+                    <button @click="login">Login</button>
+                </div>
+            `
+    });
+
+    // Define the login page component
+    Vue.component('login-page', {
+        template: `
+                <div class="login-container">
+                    <div class="login-title">Login</div>
+                    <login-form></login-form>
+                </div>
+            `
+    });
+
+    // Initialize Vue instance
+    new Vue({
+        el: '#app'
+    });
+</script>
+
+</body>
+</html>
