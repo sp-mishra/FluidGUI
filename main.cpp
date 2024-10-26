@@ -6,21 +6,56 @@
 #include <thread>
 #include <fstream>
 #include <sstream>
-#include <CoreGraphics/CGDisplayConfiguration.h>
+
+#include "HtmlUtility.hpp"
+#include "ScreenUtils.hpp"
 #include "Log.hpp"
-#include "HtmlGenerator.hpp"
+#include "W2UIHtmlGenerator.hpp"
+#include "UIDom.hpp"
+#include "WidgetEdsl.hpp"
+
+namespace gk = groklab;
+
+void testEdsl() {
+
+
+  // Define the Protofied placeholder terminals
+  static proto::terminal<gk::placeholder<0> >::type const _1 = {{}};
+  static proto::terminal<gk::placeholder<1> >::type const _2 = {{}};
+  auto expr = (_2 - _1) / _2 * 100;
+  proto::terminal<int>::type i = {0};
+  gk::print_expr_tree(i + 1);
+  proto::literal<int> i1 = 0;
+  gk::print_expr_tree(i1 + 1);
+  gk::print_expr_tree(_1 + 1);
+  // evaluate( expr );
+}
+
+void testFluidUI() {
+  gk::HtmlUtility htmlUtils("./web/vue/index.html");
+  gk::info("HTML Content: {}", htmlUtils.toString());
+  gk::FluidUI ui("Title", std::make_unique<groklab::W2UIHtmlGenerator>());
+  ui.generate();
+  ui.run();
+}
 
 int main() {
-  CGDirectDisplayID displayID = CGMainDisplayID();
-  size_t width = CGDisplayPixelsWide(displayID);
-  size_t height = CGDisplayPixelsHigh(displayID);
 
-  std::cout << "Screen Width: " << width << ", Screen Height: " << height << std::endl;
+  // testEdsl();
+  testFluidUI();
+
+  return 0;
+}
+
+int main1() {
+  const groklab::ScreenSize screenSize = groklab::getScreenSize();
+
+  std::cout << "Screen Width: " << screenSize.width << ", Screen Height: " << screenSize.height << std::endl;
   try {
     long count = 0;
 
     // Read the content of test.html
-    std::ifstream file("./test.html");
+    std::ifstream file("./test_simple.html");
     if (!file) {
       std::cerr << "Could not open the file!" << std::endl;
       return 1;
@@ -31,7 +66,7 @@ int main() {
 
     webview::webview w(true, nullptr);
     w.set_title("Bind Example");
-    w.set_size(480, 320, WEBVIEW_HINT_NONE);
+    w.set_size(screenSize.width/2, screenSize.height/2, WEBVIEW_HINT_NONE);
 
     // A binding that counts up or down and immediately returns the new value.
     w.bind("count", [&](const std::string &req) -> std::string {
@@ -58,7 +93,7 @@ int main() {
     w.set_html(html);
     w.run();
   } catch (const webview::exception &e) {
-    std::cerr << e.what() << std::endl;
+    gk::critical("Failed to initialize FluidUI with error {}", e.what());
     return 1;
   }
 

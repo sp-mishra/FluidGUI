@@ -12,6 +12,12 @@ set(COPYRIGHT "Copyright 2024, GrokkingLab")
 set(VENDOR "GrokkingLab")
 set(DESCRIPTION "C++ GUI Using web technologies")
 
+# Define the source and destination directories
+set(WEB_SOURCE_DIR "${CMAKE_SOURCE_DIR}/web")
+set(BIN_DEST_DIR "${CMAKE_BINARY_DIR}/bin")
+
+# Copy the web directory to the bin directory
+file(COPY ${WEB_SOURCE_DIR} DESTINATION ${BIN_DEST_DIR})
 
 find_package(Threads REQUIRED)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
@@ -30,18 +36,32 @@ set(SPDLOG_ENABLE_PCH ON)
 set(SPDLOG_BUILD_EXAMPLE OFF)
 set(SPDLOG_BUILD_TESTS OFF)
 set(SPDLOG_BUILD_BENCH OFF)
+set(SPDLOG_FMT_EXTERNAL_HO OFF)
 
 # Graaf
-set(SKIP_TESTS OFF)
-set(SKIP_EXAMPLES OFF)
-set(SKIP_BENCHMARKS OFF)
+set(SKIP_TESTS ON)
+set(SKIP_EXAMPLES ON)
+set(SKIP_BENCHMARKS ON)
 
 # lexbor
 set(LEXBOR_BUILD_SHARED OFF)
 set(LEXBOR_BUILD_STATIC ON)
 
+# inja
+set(INJA_BUILD_TESTS OFF)
+set(BUILD_TESTING OFF)
+set(INJA_EXPORT OFF)
+set(INJA_USE_EMBEDDED_JSON ON)
+
+# reflect-cpp
+set(REFLECTCPP_JSON ON)
+set(REFLECTCPP_BSON OFF)
+set(REFLECTCPP_CBOR OFF)
+set(REFLECTCPP_XML OFF)
+
 include(FetchContent)
 include_directories(include)
+include_directories(third_party)
 
 FetchContent_Declare(
         webview
@@ -52,16 +72,22 @@ FetchContent_MakeAvailable(webview)
 #add_subdirectory(third_party/Catch2)
 add_subdirectory(third_party/spdlog)
 add_subdirectory(third_party/reflect-cpp)
-add_subdirectory(third_party/json)
 add_subdirectory(third_party/csv-parser)
 add_subdirectory(third_party/graaf)
 add_subdirectory(third_party/lexbor)
+#add_subdirectory(third_party/maddy)
+add_subdirectory(third_party/inja)
 
 find_library(COREGRAPHICS_LIBRARY CoreGraphics)
 add_executable(${PROJECT_NAME}
         include/Log.hpp
-        include/HtmlGenerator.hpp
+        include/W2UIHtmlGenerator.hpp
         main.cpp
+        include/UIDom.hpp
+        include/ScreenUtils.hpp
+        include/FileUtils.hpp
+        include/HtmlUtility.hpp
+        include/WidgetEdsl.hpp
 )
 #target_sources(${PROJECT_NAME} PRIVATE main.cpp
 #
@@ -70,10 +96,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         webview::core
 #        Catch2::Catch2
         spdlog::spdlog
-        nlohmann_json::nlohmann_json
+        inja
         reflectcpp
         Graaf::Graaf
         csv
         lexbor_static
+#        maddy
         ${COREGRAPHICS_LIBRARY}
 )
