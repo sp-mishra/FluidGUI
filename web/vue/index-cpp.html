@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Async Message with window.count</title>
+</head>
+<body>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<div id="app">
+    <p>message: {{ message }}</p>
+    <button @click="loadUsers">Load Users</button>
+    <div v-if="users">
+        <ul>
+            <li v-for="user in users" :key="user.id">{{ user.name }}</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                message: '',  // Start with an empty message
+                users: null,
+            }
+        },
+        methods: {
+            async loadUsers() {
+                const test = await window.count("loadUsers");
+                console.log("loadUsers: " + JSON.stringify(test, null, 2));
+                this.users = [
+                    { id: 1, name: 'Alice' + test.id},
+                    { id: 2, name: 'Bob' + test.id},
+                    { id: 3, name: 'Charlie' + test.id},
+                ];
+                return this.users
+            },
+            async getUsers() {
+                const test = await this.getUsers();
+                console.log("getUsers: " + JSON.stringify(test, null, 2));
+                return [
+                    { id: 1, name: 'Alice'},
+                    { id: 2, name: 'Bob'},
+                    { id: 3, name: 'Charlie'},
+                ];
+            },
+            async fetchMessage() {
+                // Use window.count(1) to get the message
+                this.message = await window.count("fetchMessage");
+            }
+        },
+        async mounted() {
+            await this.fetchMessage();
+        }
+    });
+    const mountedApp = app.mount('#app');
+</script>
+</body>
+</html>

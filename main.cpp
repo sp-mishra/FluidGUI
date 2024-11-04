@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "Components.hpp"
 #include "HtmlUtility.hpp"
 #include "ScreenUtils.hpp"
 #include "Log.hpp"
@@ -18,8 +19,6 @@ namespace gk = groklab;
 
 void testEdsl() {
 
-
-  // Define the Protofied placeholder terminals
   static proto::terminal<gk::placeholder<0> >::type const _1 = {{}};
   static proto::terminal<gk::placeholder<1> >::type const _2 = {{}};
   auto expr = (_2 - _1) / _2 * 100;
@@ -32,17 +31,24 @@ void testEdsl() {
 }
 
 void testFluidUI() {
-  gk::HtmlUtility htmlUtils("./web/vue/index.html");
-  gk::info("HTML Content: {}", htmlUtils.toString());
-  gk::FluidUI ui("Title", std::make_unique<groklab::W2UIHtmlGenerator>());
-  ui.generate();
-  ui.run();
+  // gk::HtmlUtility htmlUtils("./web/vue/index.html");
+  // gk::info("HTML Content: {}", htmlUtils.toString());
+  // gk::AppComponent appComponent(std::filesystem::path("./web/vue/index.html"));
+  gk::TextDisplay textDisplay("Test Text Display", gk::TextSize::medium, gk::TextStyle::bold, gk::TextColor::red);
+  // gk::FluidUI ui("Title", std::make_unique<gk::W2UIHtmlGenerator>());
+  // ui.generate();
+  // ui.run();
+}
+
+void testJavaScript() {
+
 }
 
 int main() {
 
   // testEdsl();
-  testFluidUI();
+  // testFluidUI();
+  testJavaScript();
 
   return 0;
 }

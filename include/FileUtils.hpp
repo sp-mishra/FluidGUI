@@ -36,6 +36,17 @@ namespace groklab {
             return buffer.str();
         }
 
+        static void writeToFile(const std::string &filePath, const std::string &content) {
+            std::ofstream file(filePath);
+            if (!file.is_open()) {
+                const std::string msg = std::format("Could not open file: {}", filePath);
+                error(msg);
+                throw std::runtime_error(msg);
+            }
+            file << content;
+            file.close();
+        }
+
         static bool fileExists(const std::string &filePath) {
             std::ifstream file(filePath);
             return file.good();

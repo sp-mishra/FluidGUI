@@ -69,6 +69,18 @@ FetchContent_Declare(
         GIT_TAG 0.12.0)
 FetchContent_MakeAvailable(webview)
 
+# Add Duktape
+set(DUKTAPE_SRC_DIR "${CMAKE_SOURCE_DIR}/third_party/duktape")
+set(DUKTAPE_SRC_FILES
+    ${DUKTAPE_SRC_DIR}/duk_config.h
+    ${DUKTAPE_SRC_DIR}/duktape.c
+    ${DUKTAPE_SRC_DIR}/duktape.h
+    include/JavaScript.hpp
+    )
+add_library(duktape STATIC ${DUKTAPE_SRC_FILES})
+set_target_properties(duktape PROPERTIES LINKER_LANGUAGE C)
+target_include_directories(duktape PUBLIC ${DUKTAPE_SRC_DIR})
+
 #add_subdirectory(third_party/Catch2)
 add_subdirectory(third_party/spdlog)
 add_subdirectory(third_party/reflect-cpp)
@@ -77,30 +89,36 @@ add_subdirectory(third_party/graaf)
 add_subdirectory(third_party/lexbor)
 #add_subdirectory(third_party/maddy)
 add_subdirectory(third_party/inja)
+add_subdirectory(third_party/eventpp)
 
 find_library(COREGRAPHICS_LIBRARY CoreGraphics)
 add_executable(${PROJECT_NAME}
-        include/Log.hpp
-        include/W2UIHtmlGenerator.hpp
-        main.cpp
-        include/UIDom.hpp
-        include/ScreenUtils.hpp
-        include/FileUtils.hpp
-        include/HtmlUtility.hpp
-        include/WidgetEdsl.hpp
-)
+               include/Log.hpp
+               include/W2UIHtmlGenerator.hpp
+               main.cpp
+               include/UIDom.hpp
+               include/ScreenUtils.hpp
+               include/FileUtils.hpp
+               include/HtmlUtility.hpp
+               include/WidgetEdsl.hpp
+               include/Components.hpp
+               include/StringUtils.hpp
+               include/ComponentConstants.hpp
+               )
 #target_sources(${PROJECT_NAME} PRIVATE main.cpp
 #
 #)
 target_link_libraries(${PROJECT_NAME} PRIVATE
-        webview::core
-#        Catch2::Catch2
-        spdlog::spdlog
-        inja
-        reflectcpp
-        Graaf::Graaf
-        csv
-        lexbor_static
-#        maddy
-        ${COREGRAPHICS_LIBRARY}
-)
+                      webview::core
+                      #        Catch2::Catch2
+                      eventpp::eventpp
+                      spdlog::spdlog
+                      inja
+                      reflectcpp
+                      Graaf::Graaf
+                      csv
+                      lexbor_static
+                      #        maddy
+                      duktape
+                      ${COREGRAPHICS_LIBRARY}
+                      )

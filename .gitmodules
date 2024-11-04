@@ -22,3 +22,6 @@
 [submodule "third_party/inja"]
 	path = third_party/inja
 	url = https://github.com/pantor/inja.git
+[submodule "third_party/eventpp"]
+	path = third_party/eventpp
+	url = https://github.com/wqking/eventpp.git

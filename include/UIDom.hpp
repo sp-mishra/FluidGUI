@@ -5,6 +5,7 @@
 
 #include <webview/webview.h>
 #include <rfl/json.hpp>
+#include <random>
 #include <rfl.hpp>
 #include <memory>
 #include "ScreenUtils.hpp"
@@ -62,61 +63,6 @@ namespace groklab {
     class ParentLayout : public Widget {
     };
 
-    enum class HtmlTag {
-        HTML,
-        HEAD,
-        TITLE,
-        BODY,
-        H1,
-        H2,
-        H3,
-        H4,
-        H5,
-        H6,
-        P,
-        DIV,
-        SPAN,
-        A,
-        IMG,
-        UL,
-        OL,
-        LI,
-        TABLE,
-        TR,
-        TH,
-        TD,
-        FORM,
-        INPUT,
-        BUTTON,
-        SELECT,
-        OPTION,
-        TEXTAREA,
-        IFRAME,
-        CANVAS,
-        SVG,
-        PATH,
-        RECT,
-        CIRCLE,
-        ELLIPSE,
-        LINE,
-        POLYGON,
-        POLYLINE,
-        G,
-        SCRIPT,
-        STYLE,
-        META,
-        LINK,
-        BR,
-        HR,
-        COMMENT
-    };
-
-    struct HtmlNode {
-        HtmlTag htmlTag;
-        std::string content;
-        std::map<std::string, std::string> attributes;
-    };
-
     class HtmlGenerator {
     public:
         using WidgetGraphType = graaf::directed_graph<Widget, WidgetEdgeProperties>;
@@ -158,10 +104,10 @@ namespace groklab {
                 return;
             }
             std::string html = htmlGenerator_->generateHtml(widgetGraph_);
-            webview_->bind("count",
+            auto a = webview_->bind("count",
                 [&](const std::string &req) -> std::string {
                 info("Request from:  {}", req);
-                    const Res res = {req, "123"};
+                    const Res res = {req, generateRandomId()};
                     const std::string result = rfl::json::write(res);
                 return result;
             });
@@ -187,6 +133,15 @@ namespace groklab {
                 critical("Failed to initialize FluidUI with error {}", e.what());
                 throw;
             }
+        }
+
+        // Function to generate a random ID
+        [[nodiscard]] static std::string generateRandomId() {
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(1000, 9999);
+
+            return std::to_string(dis(gen));
         }
     };
 }
